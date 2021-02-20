@@ -4,22 +4,31 @@ using UnityEngine;
 
 public class PlayerBehavior : MonoBehaviour
 {
-    [SerializeField] private bool isGrounded;
+    [Header("Movement Properties")]
+
     [SerializeField] public CharacterController controller;
     [SerializeField] public float maxSpeed = 10.0f;
     //游戏物体的重力
     [SerializeField] public float gravity = -30.0f;
     //施加跳跃的力
     [SerializeField] public float jumpHeight = 3.0f;
-    [SerializeField] public float groundRadius = 0.5f;
+    
     [SerializeField] public Vector3 velocity;
+
+    [Header("Ground Detection Properties")]
+    [SerializeField] public float groundRadius = 0.5f;
     [SerializeField] public LayerMask groundMask;
     [SerializeField] public Transform groundCheck;
+    [SerializeField] private bool isGrounded;
+
+    [Header("Minimap")]
+    public GameObject minimap;
 
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        minimap.SetActive(false);
     }
 
     // Update is called once per frame
@@ -49,6 +58,14 @@ public class PlayerBehavior : MonoBehaviour
         }
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            // toggle the minimap on/off
+            minimap.SetActive(!minimap.activeInHierarchy);
+        }
+
+
     }
 
     //这个方法只在Edit模式下执行

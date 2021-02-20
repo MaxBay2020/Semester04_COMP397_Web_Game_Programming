@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
+  - DeadPlae
   layers:
   - Default
   - TransparentFX
