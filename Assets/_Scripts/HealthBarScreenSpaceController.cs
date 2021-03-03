@@ -10,9 +10,9 @@ public class HealthBarScreenSpaceController : MonoBehaviour
 
     [Header("Health Properties")]
     [Range(0, 100)]
-    public int maximumHealth = 100;
+    public float maximumHealth = 100;
     [Range(1,100)]
-    public int currentHealth = 100;
+    public float currentHealth = 100;
     
 
     // Start is called before the first frame update
@@ -20,6 +20,7 @@ public class HealthBarScreenSpaceController : MonoBehaviour
     {
         healthBarSlider = GetComponent<Slider>();
         currentHealth = maximumHealth;
+        
     }
 
     // Update is called once per frame
@@ -35,7 +36,7 @@ public class HealthBarScreenSpaceController : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         healthBarSlider.value -= damage;
         currentHealth -= damage;

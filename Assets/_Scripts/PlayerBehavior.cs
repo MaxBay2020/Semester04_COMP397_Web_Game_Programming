@@ -24,6 +24,15 @@ public class PlayerBehavior : MonoBehaviour
     [Header("Minimap")]
     public GameObject minimap;
 
+    [Header("Player Sounds")]
+    public AudioSource jumpClip, hitClip;
+
+    [Header("Player Abilities")]
+    [Range(0, 200)] public float health;
+
+    [Header("HealthBar")]
+    public HealthBarScreenSpaceController healthBar;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -75,5 +84,13 @@ public class PlayerBehavior : MonoBehaviour
         Gizmos.color = Color.white;
         //设置要画的形状，这里是画球形轮廓
         Gizmos.DrawWireSphere(groundCheck.position, groundRadius);
+    }
+
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+        healthBar.TakeDamage(damage);
+        if (health < 0)
+            health = 0;
     }
 }

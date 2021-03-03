@@ -22,25 +22,27 @@ public class ZombieBahavior : MonoBehaviour
     public GameObject player;
     private Vector3 originalPosition;
 
+    [Header("Attack")]
+    public float attackDistance = 5.0f;
+    private AudioSource audioSource;
+    public AudioClip danceClip;
+    public PlayerBehavior playerBehavior;
+    public float damageValue;
+
+
     // Start is called before the first frame update
     void Start()
     {
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         originalPosition = transform.position;
+        audioSource = GetComponent<AudioSource>();
+        playerBehavior = FindObjectOfType<PlayerBehavior>();
     }
 
-    // Update is called once per frame
-    void Update()
+    // Update is called once per dframe
+    void FixedUpdate()
     {
-        //Vector3 size = new Vector3(4, 4, 10);
-        //RaycastHit hit;
-        //hasLOS = Physics.BoxCast(transform.position + LOSoffset, size, transform.forward, out hit, transform.rotation, 10.0f, collisionLayer);
-        ////Debug.DrawRay(transform.position + LOSoffset, transform.forward);
-        //if (hasLOS)
-        //{
-        //    Debug.Log(hit.transform.name);
-        //}
 
         if (hasLOS)
         {
@@ -52,9 +54,20 @@ public class ZombieBahavior : MonoBehaviour
                 animator.SetInteger("AnimState", (int)ZombieState.JUMP);
             }
 
-            if (Vector3.Distance(transform.position, player.transform.position) <= 5.0f)
+            if (Time.frameCount % 60==0)
+            {
+                DoDanceDamage();
+            }
+
+            if (Vector3.Distance(transform.position, player.transform.position) <= attackDistance)
             {
                 animator.SetInteger("AnimState", (int)ZombieState.DANCE);
+                if (!audioSource.isPlaying)
+                {
+                    audioSource.clip = danceClip;
+                    audioSource.Play();
+                }
+                
                 transform.LookAt(transform.position-player.transform.forward);
             }
         }
@@ -90,6 +103,11 @@ public class ZombieBahavior : MonoBehaviour
             agent.SetDestination(originalPosition);
         }
             
+    }
+
+    private void DoDanceDamage()
+    {
+        playerBehavior.TakeDamage(damageValue);
     }
 
     //private void OnDrawGizmos()
