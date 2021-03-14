@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class PlayerBehavior : MonoBehaviour
 {
+    [Header("Controls")]
+    public Joystick joystick;
+    public float horizontalSensitivity;
+    public float verticaSensitivity;
+
     [Header("Movement Properties")]
 
     [SerializeField] public CharacterController controller;
@@ -14,6 +19,7 @@ public class PlayerBehavior : MonoBehaviour
     [SerializeField] public float jumpHeight = 3.0f;
     
     [SerializeField] public Vector3 velocity;
+
 
     [Header("Ground Detection Properties")]
     [SerializeField] public float groundRadius = 0.5f;
@@ -30,8 +36,10 @@ public class PlayerBehavior : MonoBehaviour
     [Header("Player Abilities")]
     [Range(0, 200)] public float health;
 
+
     [Header("HealthBar")]
     public HealthBarScreenSpaceController healthBar;
+
 
     // Start is called before the first frame update
     void Start()
@@ -50,29 +58,39 @@ public class PlayerBehavior : MonoBehaviour
             velocity.y = -2.0f;
 
         }
-        //移动，注意！游戏物体是在xz平面上移动，在y轴上跳跃
-        //沿着x轴移动
-        float x = Input.GetAxis("Horizontal");
-        //沿着z轴移动
-        float z = Input.GetAxis("Vertical");
+
+        #region input for WebGL and Desktop
+        ////移动，注意！游戏物体是在xz平面上移动，在y轴上跳跃
+        ////沿着x轴移动
+        //x = Input.GetAxis("Horizontal");
+        ////沿着z轴移动
+        //z = Input.GetAxis("Vertical");
+        #endregion
+
+        #region input for mobile
+        float x = joystick.Horizontal;
+        float z = joystick.Vertical;
+        #endregion
+       
+
         Vector3 move = transform.right * x + transform.forward * z;
 
         //CharacterControll实现移动和跳跃的方法：
         controller.Move(move * maxSpeed * Time.deltaTime);
 
         //实现跳跃
-        if (Input.GetButton("Jump") && isGrounded)
-        {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2.0f * gravity);
-        }
+        //if (Input.GetButton("Jump") && isGrounded)
+        //{
+        //    Jump();
+        //}
+
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
 
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            // toggle the minimap on/off
-            minimap.SetActive(!minimap.activeInHierarchy);
-        }
+        //if (Input.GetKeyDown(KeyCode.M))
+        //{
+        //    ToggleMiniMap();
+        //}
 
 
     }
@@ -92,5 +110,29 @@ public class PlayerBehavior : MonoBehaviour
         healthBar.TakeDamage(damage);
         if (health < 0)
             health = 0;
+    }
+
+    public void OnJumpButtonPressed()
+    {
+        if (isGrounded)
+        {
+            Jump();
+        }
+    }
+
+    void Jump()
+    {
+        velocity.y = Mathf.Sqrt(jumpHeight * -2.0f * gravity);
+    }
+
+    void ToggleMiniMap()
+    {
+        // toggle the minimap on/off
+        minimap.SetActive(!minimap.activeInHierarchy);
+    }
+
+    public void OnMapButtonPressed()
+    {
+        ToggleMiniMap();
     }
 }

@@ -32,22 +32,12 @@ public class ControlPanelController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            if (isOffScreen)
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-            }
-            else
-            {
-                Cursor.lockState = CursorLockMode.None;
-            }
+        //if (Input.GetKeyDown(KeyCode.Tab))
+        //{
+        //    ToggleControlPanel();
             
-            playerCamera.enabled = isOffScreen;
-            isOffScreen = !isOffScreen;
-            timer = 0;
-            
-        }
+        //}
+
         if (isOffScreen)
         {
             MoveControlPanelDown();
@@ -83,5 +73,26 @@ public class ControlPanelController : MonoBehaviour
         {
             gameManger.TogglePause();
         }
+    }
+
+    void ToggleControlPanel()
+    {
+        if (isOffScreen)
+        {
+            //Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
+            //Cursor.lockState = CursorLockMode.None;
+        }
+
+        playerCamera.enabled = isOffScreen;
+        isOffScreen = !isOffScreen;
+        timer = 0;
+    }
+
+    public void OnControlButtonPressed()
+    {
+        ToggleControlPanel();
     }
 }
