@@ -14,9 +14,17 @@ public class ControlPanelController : MonoBehaviour
 
     public bool isOffScreen;
 
-    public CameraController playerCamera;
+    [Header("Player Settings")]
+    private CameraController playerCamera;
+    private PlayerBehavior player;
 
-    public GameManger gameManger;
+    private GameManger gameManger;
+
+    [Header("Scene Data")]
+    public SceneDataSO sceneData;
+
+    public GameObject gameStatePanel;
+
 
     // Start is called before the first frame update
     void Start()
@@ -24,6 +32,7 @@ public class ControlPanelController : MonoBehaviour
         gameManger = FindObjectOfType<GameManger>();
         playerCamera = FindObjectOfType<CameraController>();
         rectTransform = GetComponent<RectTransform>();
+        player = FindObjectOfType<PlayerBehavior>();
 
         //rectTransform.anchoredPosition = new Vector2(485f, -300f);
         rectTransform.anchoredPosition = offScreenPosition;
@@ -46,6 +55,8 @@ public class ControlPanelController : MonoBehaviour
         {
             MoveControlPanelUp();
         }
+
+        gameStatePanel.SetActive(gameManger.isGamePaused);
     }
 
     void MoveControlPanelDown ()
@@ -94,5 +105,23 @@ public class ControlPanelController : MonoBehaviour
     public void OnControlButtonPressed()
     {
         ToggleControlPanel();
+    }
+
+    public void OnLoadButtonPressed()
+    {
+        player.controller.enabled = false;
+        player.transform.position = sceneData.playerPosition;
+        player.transform.rotation = sceneData.playerRotation;
+        player.controller.enabled = true;
+
+        player.health = sceneData.playerHealth;
+        player.healthBar.SetHealth(sceneData.playerHealth);
+    }
+
+    public void OnSaveButtonPressed()
+    {
+        sceneData.playerPosition = player.transform.position;
+        sceneData.playerRotation = player.transform.rotation;
+        sceneData.playerHealth = player.health;
     }
 }

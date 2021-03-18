@@ -6,8 +6,10 @@ public class PlayerBehavior : MonoBehaviour
 {
     [Header("Controls")]
     public Joystick joystick;
-    public float horizontalSensitivity;
-    public float verticaSensitivity;
+    //public float horizontalSensitivity;
+    //public float verticaSensitivity;
+
+    public float controlSensitvity = 2f;
 
     [Header("Movement Properties")]
 
