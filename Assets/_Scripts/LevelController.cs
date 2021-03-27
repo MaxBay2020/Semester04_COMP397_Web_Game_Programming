@@ -1,0 +1,51 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
+
+public class LevelController : MonoBehaviour
+{
+    [Header("World Attributes")]
+    public float tileWidth;
+    public float tileLength;
+    public List<GameObject> tilePrefebs;
+    public List<GameObject> activeTiles;
+    public GameObject startTile;
+
+    [Header("Navigation")]
+    NavMeshSurface surface;
+
+    private void Awake()
+    {
+        surface = GetComponent<NavMeshSurface>();
+        BuildWorld();
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        surface.BuildNavMesh();
+    }
+
+    private void BuildWorld()
+    {
+        for (int width = 0; width < tileWidth; width++)
+        {
+            for (int length = 0; length < tileLength; length++)
+            {
+                if (activeTiles.Count < 1)
+                {
+                    activeTiles.Add(startTile);
+                    continue;
+                }
+                
+                var tileIndex = Random.Range(0, tilePrefebs.Count);
+                var randomTilePosition = new Vector3(width * 16, 0.0f, length * 16);
+                var randomTileRotation = Random.Range(0, 4) * 90.0f;
+                var randomTile = Instantiate(tilePrefebs[tileIndex], randomTilePosition, Quaternion.Euler(0, randomTileRotation, 0));
+                randomTile.transform.parent = this.transform;
+                activeTiles.Add(randomTile);
+            }
+        }
+    }
+}
